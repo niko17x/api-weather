@@ -1,0 +1,42 @@
+*, *::after, *::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.main-container {
+  border: 2px solid black;
+  display: grid;
+}
+
+.header {
+  place-self: center;
+  font-size: 3rem;
+}
+
+.body {
+  display: grid;
+  place-content: center;
+  gap: 3rem;
+}
+
+#search-input {
+  /* border: 2px solid blue; */
+  width: 40rem;
+  height: 3rem;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  place-self: center;
+  font-size: 2rem;
+  padding: 0.3rem;
+}
+
+#search-input:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.current-weather {
+  /* border: 2px solid purple; */
+}
