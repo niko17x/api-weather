@@ -96,7 +96,8 @@ body {
 }
 
 
-.current-data img {
+.current-data img,
+.weather-data img {
   height: 2rem;
   width: auto;
   align-self: center;
@@ -126,7 +127,18 @@ li {
   backdrop-filter: blur(10px);
 }
 
-.multi {
+.date {
   display: grid;
-  padding: 0.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 1rem;
+}
+
+.weather-data {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: min-content 1fr;
+  justify-items: flex-start;
+  align-items: center;
+  padding: 0.3rem;
 }
