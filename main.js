@@ -50,11 +50,16 @@ function removeDupe(input) {
     }
   });
 }
-removeDupe();
 
-async function weatherReport() {
+function defaultCity() {
+  if (searchQueue.length === 0) {
+    searchQueue.push("seattle");
+  }
+  currentWeather();
+}
+
+async function currentWeather() {
   const getLastInput = searchQueue[searchQueue.length - 1];
-
   try {
     const response = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=imperial`
@@ -75,11 +80,68 @@ async function weatherReport() {
   }
 }
 
-function defaultCity() {
-  if (searchQueue.length === 0) {
-    searchQueue.push("seattle");
+const dayOneDate = document.querySelector(".day-one .date");
+const dayOneDescript = document.querySelector(".day-one .condition-data");
+const dayOneTemp = document.querySelector(".day-one .temp-data");
+const dayOneFeels = document.querySelector(".day-one .feels-data");
+const dayOneHumid = document.querySelector(".day-one .humid-data");
+const dayOneWindSp = document.querySelector(".day-one .wind-data");
+
+async function fiveDayWeather() {
+  try {
+    const response = await fetch(
+      "https://api.openweathermap.org/data/2.5/forecast?q=London&APPID=b4549207e88e72a465563047d09afc2b&units=imperial"
+    );
+
+    const getJson = await response.json();
+
+    const getDate = getJson.list[0].dt_txt;
+    const getCond = getJson.list[0].weather[0].description;
+    const getTemp = getJson.list[0].weather.temp;
+    const getFeels = getJson.list[0].main.feels_like;
+    const getHumid = getJson.list[0].main.humidity;
+    const getWindSp = getJson.list[0].wind.speed;
+
+    weatherData(
+      dayOneDate,
+      getDate,
+      dayOneDescript,
+      getCond,
+      dayOneTemp,
+      getTemp,
+      dayOneFeels,
+      getFeels,
+      dayOneHumid,
+      getHumid,
+      dayOneWindSp,
+      getWindSp
+    );
+  } catch (error) {
+    // Call error.
   }
-  weatherReport();
+}
+fiveDayWeather();
+
+function weatherData(
+  date,
+  getDate,
+  condition,
+  getCond,
+  temper,
+  getTemp,
+  feels,
+  getFeels,
+  humidi,
+  getHumid,
+  wind,
+  getWindSp
+) {
+  date.innerText = getDate;
+  condition.innerText = getCond;
+  temper.innerText = getTemp;
+  feels.innerText = getFeels;
+  humidi.innerText = getHumid;
+  wind.innerText = getWindSp;
 }
 
 searchBtn.addEventListener("click", () => {
@@ -92,7 +154,7 @@ searchBtn.addEventListener("click", () => {
     searchQueue.push(userInput.value);
   }
   console.log(searchQueue);
-  weatherReport();
+  currentWeather();
   save();
   userInput.value = "";
 });
