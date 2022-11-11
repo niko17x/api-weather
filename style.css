@@ -2,11 +2,24 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: "Josefin Sans";
+}
+
+body {
+  background-color: aliceblue;
+  color: white;
+  
+  background-image: url("./img/img2.jpeg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: 100%;
 }
 
 .main-container {
-  border: 2px solid black;
   display: grid;
+  width: 100vw;
+  height: 100vh;
 }
 
 .header {
@@ -16,27 +29,104 @@
 
 .body {
   display: grid;
-  place-content: center;
   gap: 3rem;
 }
 
+.search {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.search img {
+  height: 5rem;
+  align-self: center;
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(108deg) brightness(104%) contrast(104%);
+  cursor: pointer;
+}
+
 #search-input {
-  /* border: 2px solid blue; */
   width: 40rem;
   height: 3rem;
   border-left: none;
   border-right: none;
   border-top: none;
   place-self: center;
-  font-size: 2rem;
-  padding: 0.3rem;
+  font-size: 3rem;
+  padding: 2rem;
+  align-self: center;
+  background: transparent;
+  border-color: white;
+  
 }
 
 #search-input:focus {
   box-shadow: none;
   outline: none;
+  color: white;
+}
+
+.search button {
+  background: transparent;
+  display: grid;
+  border: none;
+}
+
+.search-btn {
+  transition: all .2s ease-in-out;
+}
+
+.search-btn:hover {
+  transform: scale(1.2)
 }
 
 .current-weather {
-  /* border: 2px solid purple; */
+  display: grid;
+  justify-self: center;
+  width: 40vw;
+  padding: 2rem;
+  border-radius: 10px;
+
+  backdrop-filter: blur(15px);
+}
+
+.current-data {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  gap: 1rem;
+}
+
+
+.current-data img {
+  height: 2rem;
+  width: auto;
+  align-self: center;
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(108deg) brightness(104%) contrast(104%);
+}
+
+.city-name {
+  place-self: center;
+  font-size: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 1.5rem;
+}
+
+li {
+  text-decoration: none;
+  list-style: none;
+  font-size: 1.2rem;
+  align-self: center;
+}
+
+.five-day-forecast {
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+  justify-content: space-evenly;
+  grid-template-columns: repeat(5, 1fr);
+  backdrop-filter: blur(10px);
+}
+
+.multi {
+  display: grid;
+  padding: 0.5rem;
 }
