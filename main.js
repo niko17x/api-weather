@@ -8,9 +8,14 @@
 // Local Storage:
 
 const LOCAL_STORAGE_MAIN_KEY = "queue.searchQueue";
+const LOCAL_STORAGE_USER_MEASUREMENT = "measure.userMeasure";
 
 const searchQueue =
   JSON.parse(localStorage.getItem(LOCAL_STORAGE_MAIN_KEY)) || [];
+
+let userMeasure = JSON.parse(
+  localStorage.getItem(LOCAL_STORAGE_USER_MEASUREMENT)
+);
 
 // Variables:
 
@@ -26,6 +31,9 @@ const windSp = document.querySelector(".current-weather .wind-speed");
 
 const searchBtn = document.querySelector(".search button");
 const userInput = document.querySelector("#search-input");
+
+const labelSwitch = document.querySelector(".switch");
+const inputToggle = document.querySelector(".toggle-btn");
 
 // Day One:
 
@@ -72,8 +80,19 @@ const dayFiveFeels = document.querySelector(".day-five .feels-data");
 const dayFiveHumid = document.querySelector(".day-five .humid-data");
 const dayFiveWindSp = document.querySelector(".day-five .wind-data");
 
+function resetWindow() {
+  document.querySelector(".clear-storage").addEventListener("click", () => {
+    window.localStorage.clear();
+    window.location.reload(true); // Refresh window to re-render search history.
+  });
+}
+
 function save() {
   localStorage.setItem(LOCAL_STORAGE_MAIN_KEY, JSON.stringify(searchQueue));
+  localStorage.setItem(
+    LOCAL_STORAGE_USER_MEASUREMENT,
+    JSON.stringify(userMeasure)
+  );
 }
 
 // Clear all data fields:
@@ -107,12 +126,20 @@ function defaultCity() {
 
 async function currentWeather() {
   const getLastInput = searchQueue[searchQueue.length - 1];
+  let currReport;
+  let foreReport;
   try {
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=imperial`
-    );
+    if (userMeasure === "imperial") {
+      currReport = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=imperial`
+      );
+    } else {
+      currReport = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=metric`
+      );
+    }
 
-    const getJsonCurrent = await response.json();
+    const getJsonCurrent = await currReport.json();
 
     clearDataFields();
 
@@ -123,13 +150,19 @@ async function currentWeather() {
     humid.textContent += getJsonCurrent.main.humidity;
     windSp.textContent += getJsonCurrent.wind.speed;
 
-    //! :
+    // Forecast Reporting:
 
-    const result = await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=imperial`
-    );
+    if (userMeasure === "imperial") {
+      foreReport = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=imperial`
+      );
+    } else {
+      foreReport = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=metric`
+      );
+    }
 
-    const getJson = await result.json();
+    const getJson = await foreReport.json();
 
     const getDate = getJson.list[1].dt_txt;
     const getCond = getJson.list[1].weather[0].description;
@@ -255,6 +288,8 @@ async function currentWeather() {
     searchQueue.pop();
     currentWeather();
   }
+  save();
+  displaySearchHistory();
 }
 
 // ? For the date => set the date to a variable => edit the variable date to the format you want it to be (possibly by using regex?).
@@ -287,7 +322,7 @@ function displaySearchHistory() {
   const searchData = document.querySelector(".search-data");
   clearElement(searchData);
 
-  for (let i = searchQueue.length - 1; i !== 0; i -= 1) {
+  for (let i = searchQueue.length - 1; i > -1; i -= 1) {
     const li = document.createElement("li");
     const newWord = capFirstLetter(searchQueue[i]);
     li.innerText = newWord;
@@ -307,7 +342,29 @@ function capFirstLetter(word) {
   return word[0].toUpperCase() + word.slice(1).toLowerCase();
 }
 
+function toggleMeasure() {
+  if (userMeasure == null || userMeasure === undefined) {
+    inputToggle.checked = true; // Set default measurement to imperial.
+    userMeasure = "imperial";
+  } else if (userMeasure === "imperial") {
+    inputToggle.checked = true;
+  } else {
+    inputToggle.checked = false;
+  }
+  save();
+}
+
 // * Events:
+
+labelSwitch.addEventListener("click", () => {
+  if (inputToggle.checked) {
+    userMeasure = "imperial";
+  } else {
+    userMeasure = "metric";
+  }
+  save();
+  resetWindow();
+});
 
 searchBtn.addEventListener("click", () => {
   if (!searchQueue.includes(userInput.value)) {
@@ -319,19 +376,14 @@ searchBtn.addEventListener("click", () => {
     searchQueue.push(userInput.value.toUpperCase());
   }
 
-  displaySearchHistory();
-
   currentWeather();
   save();
   userInput.value = "";
 });
 
-defaultCity();
-
-displaySearchHistory();
-
 // Clear local storage:
 
-document.querySelector(".clear-storage").addEventListener("click", () => {
-  window.localStorage.clear();
-});
+toggleMeasure();
+defaultCity();
+displaySearchHistory();
+resetWindow();
