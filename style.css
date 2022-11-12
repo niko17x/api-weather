@@ -20,6 +20,7 @@ body {
   display: grid;
   width: 100vw;
   height: 100vh;
+  padding: 1rem;
 }
 
 .header {
@@ -56,7 +57,7 @@ body {
   align-self: center;
   background: transparent;
   border-color: white;
-  
+  color: white;  
 }
 
 #search-input:focus {
@@ -89,6 +90,11 @@ body {
   border-radius: 10px;
 }
 
+.current-data li {
+  font-size: 1.5rem;
+}
+
+
 .current-weather,
 .user-control {
   padding: 2rem;
@@ -109,15 +115,18 @@ body {
 }
 
 .search-history {
-  font-size: 3rem;
+  font-size: 4rem;
   display: grid;
   grid-template-rows: 1fr 2fr;
+  text-align: center;
 }
 
 .search-data {
   max-height: 10rem;
   overflow: scroll;
   overflow-x: hidden;
+
+  text-align: center;
 }
 
 .search-data::-webkit-scrollbar {
@@ -216,26 +225,17 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .current-data * {
   margin-top: 1rem;
 }
 
-.current-data img,
+.current-data img {
+  height: 3rem;
+  width: auto;
+  align-self: center;
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(108deg) brightness(104%) contrast(104%);
+}
+
 .weather-data img {
   height: 2rem;
   width: auto;
@@ -243,11 +243,13 @@ input:checked + .slider:before {
   filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(108deg) brightness(104%) contrast(104%);
 }
 
+
+
 .city-name {
-  place-self: center;
-  font-size: 3.5rem;
+  display: grid;
+  place-content: center;
+  font-size: 4rem;
   height: 3.5rem;
-  margin-bottom: 1.5rem;
 }
 
 li {
@@ -280,6 +282,45 @@ li {
   justify-items: flex-start;
   align-items: center;
   padding: 0.3rem;
+}
+
+.footer {
+  display: grid;
+  place-content: center;
+  padding: 1rem;
+}
+
+.clear-storage {
+  align-items: center;
+  background: transparent;
+  border-radius: 12px;
+  box-sizing: border-box;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-size: 1.2rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .2s,-webkit-box-shadow .2s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: all .2s ease-in-out;
+
+  width: 20vw;
+}
+
+.clear-storage:hover {
+  transform: scale(1.1);
 }
 
 /* Dynamic: */
