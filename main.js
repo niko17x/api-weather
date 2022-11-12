@@ -81,10 +81,11 @@ const dayFiveHumid = document.querySelector(".day-five .humid-data");
 const dayFiveWindSp = document.querySelector(".day-five .wind-data");
 
 function resetWindow() {
-  document.querySelector(".clear-storage").addEventListener("click", () => {
-    window.localStorage.clear();
-    window.location.reload(true); // Refresh window to re-render search history.
-  });
+  window.location.reload(true); // Refresh window to re-render search history.
+}
+
+function clearLocStor() {
+  window.localStorage.clear();
 }
 
 function save() {
@@ -322,7 +323,9 @@ function displaySearchHistory() {
   const searchData = document.querySelector(".search-data");
   clearElement(searchData);
 
-  for (let i = searchQueue.length - 1; i > -1; i -= 1) {
+  // Takes into account removing 'Seattle' default city:
+
+  for (let i = searchQueue.length - 1; i > 0; i -= 1) {
     const li = document.createElement("li");
     const newWord = capFirstLetter(searchQueue[i]);
     li.innerText = newWord;
@@ -363,6 +366,7 @@ labelSwitch.addEventListener("click", () => {
     userMeasure = "metric";
   }
   save();
+
   resetWindow();
 });
 
@@ -383,7 +387,12 @@ searchBtn.addEventListener("click", () => {
 
 // Clear local storage:
 
+const clearStorBtn = document.querySelector(".clear-storage");
+clearStorBtn.addEventListener("click", () => {
+  clearLocStor();
+  resetWindow();
+});
+
 toggleMeasure();
 defaultCity();
 displaySearchHistory();
-resetWindow();
