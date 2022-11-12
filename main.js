@@ -27,64 +27,6 @@ const windSp = document.querySelector(".current-weather .wind-speed");
 const searchBtn = document.querySelector(".search button");
 const userInput = document.querySelector("#search-input");
 
-function save() {
-  localStorage.setItem(LOCAL_STORAGE_MAIN_KEY, JSON.stringify(searchQueue));
-}
-
-// Clear all data fields:
-
-function clearDataFields() {
-  cityName.innerText = "";
-  descript.innerText = "Condition: ";
-  temp.innerText = "Temperature: ";
-  feelsLike.innerText = "Feels-like: ";
-  humid.innerText = "Humidity: ";
-  windSp.innerText = "Wind-speed: ";
-}
-
-// Remove duplicate input entries:
-
-function removeDupe(input) {
-  searchQueue.forEach((item) => {
-    if (item === input) {
-      const index = searchQueue.indexOf(item);
-      searchQueue.splice(index, 1);
-    }
-  });
-}
-
-function defaultCity() {
-  if (searchQueue.length === 0) {
-    searchQueue.push("seattle");
-  }
-  currentWeather();
-  fiveDayWeather();
-}
-
-async function currentWeather() {
-  const getLastInput = searchQueue[searchQueue.length - 1];
-  try {
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=imperial`
-    );
-
-    const getJson = await response.json();
-
-    clearDataFields();
-
-    cityName.textContent = getJson.name;
-    descript.textContent += getJson.weather[0].description;
-    temp.textContent += getJson.main.temp;
-    feelsLike.textContent += getJson.main.feels_like;
-    humid.textContent += getJson.main.humidity;
-    windSp.textContent += getJson.wind.speed;
-  } catch (error) {
-    // Call error.
-  }
-}
-
-// ? For the date => set the date to a variable => edit the variable date to the format you want it to be (possibly by using regex?).
-
 // Day One:
 
 const dayOneDate = document.querySelector(".day-one .date");
@@ -130,47 +72,96 @@ const dayFiveFeels = document.querySelector(".day-five .feels-data");
 const dayFiveHumid = document.querySelector(".day-five .humid-data");
 const dayFiveWindSp = document.querySelector(".day-five .wind-data");
 
-async function fiveDayWeather() {
-  const getLastInput = searchQueue[searchQueue.length - 1];
+function save() {
+  localStorage.setItem(LOCAL_STORAGE_MAIN_KEY, JSON.stringify(searchQueue));
+}
 
+// Clear all data fields:
+
+function clearDataFields() {
+  cityName.innerText = "";
+  descript.innerText = "Condition: ";
+  temp.innerText = "Temperature: ";
+  feelsLike.innerText = "Feels-like: ";
+  humid.innerText = "Humidity: ";
+  windSp.innerText = "Wind-speed: ";
+}
+
+// Remove duplicate input entries:
+
+function removeDupe(input) {
+  searchQueue.forEach((item) => {
+    if (item === input) {
+      const index = searchQueue.indexOf(item);
+      searchQueue.splice(index, 1);
+    }
+  });
+}
+
+function defaultCity() {
+  if (searchQueue.length === 0) {
+    searchQueue.push("SEATTLE");
+  }
+  currentWeather();
+}
+
+async function currentWeather() {
+  const getLastInput = searchQueue[searchQueue.length - 1];
   try {
     const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=imperial`
+    );
+
+    const getJsonCurrent = await response.json();
+
+    clearDataFields();
+
+    cityName.textContent = getJsonCurrent.name;
+    descript.textContent += getJsonCurrent.weather[0].description;
+    temp.textContent += getJsonCurrent.main.temp;
+    feelsLike.textContent += getJsonCurrent.main.feels_like;
+    humid.textContent += getJsonCurrent.main.humidity;
+    windSp.textContent += getJsonCurrent.wind.speed;
+
+    //! :
+
+    const result = await fetch(
       `https://api.openweathermap.org/data/2.5/forecast?q=${getLastInput}&APPID=b4549207e88e72a465563047d09afc2b&units=imperial`
     );
 
-    const getJson = await response.json();
+    const getJson = await result.json();
 
     const getDate = getJson.list[1].dt_txt;
     const getCond = getJson.list[1].weather[0].description;
-    const getTemp = getJson.list[1].weather.temp;
+    const getTemp = getJson.list[1].main.temp;
     const getFeels = getJson.list[1].main.feels_like;
     const getHumid = getJson.list[1].main.humidity;
     const getWindSp = getJson.list[1].wind.speed;
 
     const getDateTwo = getJson.list[9].dt_txt;
     const getCondTwo = getJson.list[9].weather[0].description;
-    const getTempTwo = getJson.list[9].weather.temp;
+    const getTempTwo = getJson.list[9].main.temp;
     const getFeelsTwo = getJson.list[9].main.feels_like;
     const getHumidTwo = getJson.list[9].main.humidity;
     const getWindSpTwo = getJson.list[9].wind.speed;
 
     const getDateThree = getJson.list[17].dt_txt;
     const getCondThree = getJson.list[17].weather[0].description;
-    const getTempThree = getJson.list[17].weather.temp;
+    const getTempThree = getJson.list[17].main.temp;
     const getFeelsThree = getJson.list[17].main.feels_like;
     const getHumidThree = getJson.list[17].main.humidity;
     const getWindSpThree = getJson.list[17].wind.speed;
 
     const getDateFour = getJson.list[25].dt_txt;
     const getCondFour = getJson.list[25].weather[0].description;
-    const getTempFour = getJson.list[25].weather.temp;
+    const getTempFour = getJson.list[25].main.temp;
     const getFeelsFour = getJson.list[25].main.feels_like;
     const getHumidFour = getJson.list[25].main.humidity;
     const getWindSpFour = getJson.list[25].wind.speed;
 
     const getDateFive = getJson.list[33].dt_txt;
     const getCondFive = getJson.list[33].weather[0].description;
-    const getTempFive = getJson.list[33].weather.temp;
+    const getTempFive = getJson.list[33].main.temp;
     const getFeelsFive = getJson.list[33].main.feels_like;
     const getHumidFive = getJson.list[33].main.humidity;
     const getWindSpFive = getJson.list[33].wind.speed;
@@ -250,12 +241,23 @@ async function fiveDayWeather() {
       getWindSpFive
     );
   } catch (error) {
-    console.log(error);
     const spanMsg = document.createElement("span");
-    spanMsg.innerText = "City not found. Please try again.";
+    spanMsg.className = "error-msg";
+    spanMsg.innerText =
+      "Please enter a valid city, state, country or zip code.";
     document.querySelector(".search").append(spanMsg);
+    setTimeout(() => {
+      spanMsg.remove();
+    }, 4000);
+
+    // Remove last item from array list and re-render last item in searchQueue:
+
+    searchQueue.pop();
+    currentWeather();
   }
 }
+
+// ? For the date => set the date to a variable => edit the variable date to the format you want it to be (possibly by using regex?).
 
 function weatherData(
   date,
@@ -279,24 +281,54 @@ function weatherData(
   wind.innerText = getWindSp;
 }
 
+// Display search history to user:
+
+function displaySearchHistory() {
+  const searchData = document.querySelector(".search-data");
+  clearElement(searchData);
+
+  for (let i = searchQueue.length - 1; i !== 0; i -= 1) {
+    const li = document.createElement("li");
+    const newWord = capFirstLetter(searchQueue[i]);
+    li.innerText = newWord;
+    searchData.append(li);
+  }
+}
+
+function clearElement(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+}
+
+// Return the word with first letter capitalized:
+
+function capFirstLetter(word) {
+  return word[0].toUpperCase() + word.slice(1).toLowerCase();
+}
+
 // * Events:
 
 searchBtn.addEventListener("click", () => {
   if (!searchQueue.includes(userInput.value)) {
-    searchQueue.push(userInput.value);
+    searchQueue.push(userInput.value.toUpperCase());
   } else {
     // continue to push value to array but delete all previous duplicate values:
 
     removeDupe(userInput.value);
-    searchQueue.push(userInput.value);
+    searchQueue.push(userInput.value.toUpperCase());
   }
+
+  displaySearchHistory();
+
   currentWeather();
-  fiveDayWeather();
   save();
   userInput.value = "";
 });
 
 defaultCity();
+
+displaySearchHistory();
 
 // Clear local storage:
 
